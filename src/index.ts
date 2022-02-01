@@ -18,6 +18,6 @@ run().catch((err) => {
   console.log("Error", err);
 });
 
-app.get("/users", (req, res) => {
+app.get("/", (req, res) => {
   res.send("Hello World");
 });
