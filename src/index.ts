@@ -5,8 +5,9 @@ import { connect } from "mongoose";
 
 async function run(): Promise<void> {
   if (process.env.MONGO_URI) {
-    app.listen(process.env.PORT, () => {
-      console.log(`Listening on port ${process.env.PORT}`);
+    const port = process.env.PORT || 5000;
+    app.listen(port, () => {
+      console.log(`Listening on port ${port}`);
     });
     await connect(process.env.MONGO_URI);
     console.log("Connected MongoDB");
@@ -18,5 +19,5 @@ run().catch((err) => {
 });
 
 app.get("/users", (req, res) => {
-  res.status(200).json({ name: "Wadood" });
+  res.send("Hello World");
 });
