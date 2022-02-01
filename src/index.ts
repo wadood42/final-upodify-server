@@ -16,3 +16,7 @@ async function run(): Promise<void> {
 run().catch((err) => {
   console.log("Error", err);
 });
+
+app.get("/users", (req, res) => {
+  res.status(200).json({ name: "Wadood" });
+});
