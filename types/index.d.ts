@@ -18,4 +18,6 @@ export interface UserInterface {
 	firstName?: string;
 	lastName?: string;
 	password: string;
+	bufferCommands: boolean;
+	autoCreate: boolean; // disable `autoCreate` since `bufferCommands` is false
 }

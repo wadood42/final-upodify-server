@@ -9,6 +9,8 @@ const UserSchema = new Schema<UserInterface>({
 	firstName: { type: String, default: "" },
 	lastName: { type: String, default: "" },
 	password: { type: String, required: true },
+	bufferCommands: false,
+	autoCreate: false, // disable `autoCreate` since `bufferCommands` is false
 });
 
 export default mongoose.models.User || model<UserInterface>("User", UserSchema);
