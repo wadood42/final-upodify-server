@@ -5,8 +5,10 @@ import registerRoute from "../routes/register";
 import { connect } from "mongoose";
 import cors from "cors";
 
+let clientProductionURL = "https://final-upodify-client.vercel.app/";
+let clientDevelopmentURL = "http://localhost:3000";
 const corsOptions = {
-	origin: "http://localhost:3000",
+	origin: clientProductionURL,
 	optionsSuccessStatus: 200,
 };
 
