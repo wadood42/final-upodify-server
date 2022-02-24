@@ -4,13 +4,20 @@ import { UserInterface } from "../types";
 
 import mongoose from "mongoose";
 
-const UserSchema = new Schema<UserInterface>({
-	email: { type: String, required: true },
-	firstName: { type: String, default: "" },
-	lastName: { type: String, default: "" },
-	password: { type: String, required: true },
-	bufferCommands: false,
-	autoCreate: false, // disable `autoCreate` since `bufferCommands` is false
-});
+const UserSchema = new Schema<UserInterface>(
+	{
+		email: { type: String, required: true },
+		firstName: { type: String, default: "" },
+		lastName: { type: String, default: "" },
+		password: { type: String, required: true },
+	},
+	{
+		capped: { size: 1024 },
+		bufferCommands: false,
+		autoCreate: false,
+	}
+);
 
-export default mongoose.models.User || model<UserInterface>("User", UserSchema);
+const User = model<UserInterface>("User", UserSchema);
+
+export default mongoose.models.User || (await User.createCollection());
