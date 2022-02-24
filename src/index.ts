@@ -24,9 +24,12 @@ async function run(): Promise<void> {
 	}
 }
 
-run().catch((err) => {
-	console.log("Error FFFFF", err);
-});
+async function execute() {
+	await run().catch((err) => {
+		console.log("Error FFFFF", err);
+	});
+}
+execute();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
