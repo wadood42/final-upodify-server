@@ -20,4 +20,4 @@ const UserSchema = new Schema<UserInterface>(
 
 const User = model<UserInterface>("User", UserSchema);
 
-export default mongoose.models.User || (await User.createCollection());
+export default await User.createCollection();
