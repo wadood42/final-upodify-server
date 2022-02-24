@@ -7,11 +7,14 @@ import jwt from "jsonwebtoken";
 import { signinValidator } from "../validations/validators";
 const router = express.Router();
 
-async function generateJwt(user: UserInterface) {
+async function generateJwt(user: HydratedDocument<UserInterface>) {
 	console.log("signin token");
 	return jwt.sign(
 		{
-			data: user.email,
+			data: {
+				email: user.email,
+				id: user._id,
+			},
 		},
 		"MONIB JAN",
 		{ expiresIn: "1h" }
@@ -30,17 +33,26 @@ router.post("/signin", async (req: Request, res: Response) => {
 	console.log("login ", req.body);
 	const { email, password } = req.body;
 	try {
-		const user: HydratedDocument<UserInterface> = await User.findOne({
+		const user: HydratedDocument<UserInterface> | null = await User.findOne({
 			email: email,
 		});
-		const matched = await bcrypt.compare(password, user.password);
-		if (matched) {
-			res.status(200).json(user);
+
+		if (user) {
+			const matched = await bcrypt.compare(password, user.password);
+			if (matched) {
+				console.log("password matched", matched);
+
+				let token = await generateJwt(user);
+				res.status(200).json({ token: token });
+			} else {
+				throw "wrong credentials";
+			}
 		} else {
-			throw "wrong credentials";
+			throw "Not Registered";
 		}
 	} catch (error) {
-		res.status(404).json(error);
+		console.log("ERROR backedn", error);
+		res.status(400).json(error);
 	}
 });
 
@@ -52,7 +64,7 @@ router.post("/signup", async (req: Request, res: Response) => {
 	console.log("sign up route", req.body);
 	const { email, firstName, lastName, password } = req.body;
 	try {
-		let user: HydratedDocument<UserInterface> = await User.findOne({
+		let user: HydratedDocument<UserInterface> | null = await User.findOne({
 			email: email,
 		});
 		if (user) {
